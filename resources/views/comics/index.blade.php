@@ -3,6 +3,19 @@
 @section('content')
     <section class="container">
         <h1>Comics</h1>
+        <form action="{{ route('comics.index') }}" method="GET">
+            <select name="type" id="type">
+                <option value="">All</option>
+                <option value="comic book">comic book</option>
+                <option value="graphic novel">graphic novel</option>
+            </select>
+            <button type="submit" class="btn btn-success">Search</button>
+        </form>
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session()->get('message') }}
+            </div>
+        @endif
         <div class="row gy-4">
             @foreach ($comics as $comic)
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
