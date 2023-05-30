@@ -13,9 +13,14 @@ class ComicsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $comics = Comic::all();
+        $search = $request->query('type');
+        if($search) {
+            $comics = Comic::where('type', $search)->get();
+        } else {
+            $comics = Comic::all();
+        }
         return view('comics.index', compact('comics'));
     }
 
@@ -61,9 +66,10 @@ class ComicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Comic $comic)
     {
-        //
+
+        return view('comics.edit', compact('comic'));
     }
 
     /**
@@ -73,9 +79,11 @@ class ComicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comic $comic)
     {
-        //
+        $form_data = $request->all();
+        $comic->update($form_data);
+        return redirect()->route('comics.show', $comic->id);
     }
 
     /**
@@ -84,8 +92,9 @@ class ComicsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comic $comic)
     {
-        //
+        $comic->delete();
+        return redirect()->route('comics.index')->with('message', "{$comic->title} has been deleted");
     }
 }
