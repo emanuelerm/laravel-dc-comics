@@ -42,6 +42,15 @@ class ComicsController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|unique:comics|max:255|min:5',
+            'description' => 'required|unique:comics,description',
+            'thumb' => 'required|unique:comics,thumb|url',
+            'price' => 'required|numeric|between:0.99,999.99',
+            'series' => 'required',
+            'sale_date' => 'required|date',
+            'type' => 'required'
+        ]);
         $form_data = $request->all();
         $newComic = new Comic();
         $newComic->fill($form_data);
@@ -81,6 +90,15 @@ class ComicsController extends Controller
      */
     public function update(Request $request, Comic $comic)
     {
+        $request->validate([
+            'title' => 'required|max:255|min:5',
+            'description' => 'required',
+            'thumb' => 'required|url',
+            'price' => 'required|numeric|between:0.99,999.99',
+            'series' => 'required',
+            'sale_date' => 'required|date',
+            'type' => 'required'
+        ]);
         $form_data = $request->all();
         $comic->update($form_data);
         return redirect()->route('comics.show', $comic->id);
